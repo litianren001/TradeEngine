@@ -4,85 +4,85 @@
     <uid>0</uid>
     <time>0</time>
     <side>ASK</side>
-    <price>1015</price>
-    <amount>4</amount>
+    <price>-1</price>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>1</uid>
     <time>1</time>
     <side>BID</side>
-    <price>1025</price>
-    <amount>6</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>2</uid>
     <time>2</time>
     <side>ASK</side>
-    <price>989</price>
-    <amount>6</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>3</uid>
     <time>3</time>
     <side>BID</side>
     <price>-1</price>
-    <amount>1</amount>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>4</uid>
     <time>4</time>
     <side>ASK</side>
-    <price>1012</price>
-    <amount>2</amount>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>5</uid>
     <time>5</time>
     <side>BID</side>
-    <price>995</price>
+    <price>-1</price>
     <amount>6</amount>
   </Order>
   <Order>
     <uid>6</uid>
     <time>6</time>
     <side>BID</side>
-    <price>994</price>
-    <amount>5</amount>
+    <price>-1</price>
+    <amount>2</amount>
   </Order>
   <Order>
     <uid>7</uid>
     <time>7</time>
-    <side>ASK</side>
-    <price>989</price>
-    <amount>4</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>3</amount>
   </Order>
   <Order>
     <uid>8</uid>
     <time>8</time>
     <side>ASK</side>
     <price>-1</price>
-    <amount>6</amount>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>9</uid>
     <time>9</time>
-    <side>BID</side>
-    <price>1000</price>
-    <amount>4</amount>
+    <side>ASK</side>
+    <price>-1</price>
+    <amount>1</amount>
   </Order>
   <Order>
     <uid>0</uid>
     <time>10</time>
-    <side>BID</side>
+    <side>ASK</side>
     <price>-1</price>
-    <amount>7</amount>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>1</uid>
     <time>11</time>
-    <side>BID</side>
-    <price>996</price>
-    <amount>4</amount>
+    <side>ASK</side>
+    <price>-1</price>
+    <amount>7</amount>
   </Order>
   <Order>
     <uid>2</uid>
@@ -94,141 +94,141 @@
   <Order>
     <uid>3</uid>
     <time>13</time>
-    <side>ASK</side>
-    <price>997</price>
-    <amount>2</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>4</uid>
     <time>14</time>
     <side>BID</side>
-    <price>997</price>
-    <amount>4</amount>
+    <price>-1</price>
+    <amount>9</amount>
   </Order>
   <Order>
     <uid>5</uid>
     <time>15</time>
     <side>ASK</side>
-    <price>1016</price>
-    <amount>3</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>6</uid>
     <time>16</time>
-    <side>BID</side>
-    <price>989</price>
-    <amount>2</amount>
+    <side>ASK</side>
+    <price>-1</price>
+    <amount>3</amount>
   </Order>
   <Order>
     <uid>7</uid>
     <time>17</time>
-    <side>ASK</side>
-    <price>997</price>
-    <amount>5</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>8</uid>
     <time>18</time>
     <side>ASK</side>
-    <price>1015</price>
-    <amount>5</amount>
+    <price>-1</price>
+    <amount>7</amount>
   </Order>
   <Order>
     <uid>9</uid>
     <time>19</time>
     <side>ASK</side>
     <price>-1</price>
-    <amount>7</amount>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>0</uid>
     <time>20</time>
     <side>BID</side>
-    <price>990</price>
+    <price>-1</price>
     <amount>6</amount>
   </Order>
   <Order>
     <uid>1</uid>
     <time>21</time>
-    <side>BID</side>
-    <price>1003</price>
-    <amount>4</amount>
+    <side>ASK</side>
+    <price>-1</price>
+    <amount>3</amount>
   </Order>
   <Order>
     <uid>2</uid>
     <time>22</time>
     <side>ASK</side>
-    <price>989</price>
-    <amount>1</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>3</uid>
     <time>23</time>
-    <side>ASK</side>
-    <price>995</price>
-    <amount>5</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>9</amount>
   </Order>
   <Order>
     <uid>4</uid>
     <time>24</time>
     <side>ASK</side>
-    <price>1014</price>
-    <amount>5</amount>
-  </Order>
-  <Order>
-    <uid>5</uid>
-    <time>25</time>
-    <side>ASK</side>
     <price>-1</price>
     <amount>9</amount>
   </Order>
   <Order>
+    <uid>5</uid>
+    <time>25</time>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>6</amount>
+  </Order>
+  <Order>
     <uid>6</uid>
     <time>26</time>
-    <side>ASK</side>
-    <price>993</price>
-    <amount>1</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>7</uid>
     <time>27</time>
-    <side>BID</side>
+    <side>ASK</side>
     <price>-1</price>
-    <amount>7</amount>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>8</uid>
     <time>28</time>
-    <side>ASK</side>
-    <price>995</price>
-    <amount>4</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>9</uid>
     <time>29</time>
     <side>ASK</side>
-    <price>1006</price>
-    <amount>5</amount>
+    <price>-1</price>
+    <amount>7</amount>
   </Order>
   <Order>
     <uid>0</uid>
     <time>30</time>
     <side>BID</side>
-    <price>1002</price>
-    <amount>6</amount>
+    <price>-1</price>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>1</uid>
     <time>31</time>
     <side>ASK</side>
     <price>-1</price>
-    <amount>7</amount>
+    <amount>1</amount>
   </Order>
   <Order>
     <uid>2</uid>
     <time>32</time>
     <side>BID</side>
-    <price>1004</price>
+    <price>-1</price>
     <amount>5</amount>
   </Order>
   <Order>
@@ -243,111 +243,111 @@
     <time>34</time>
     <side>ASK</side>
     <price>-1</price>
-    <amount>3</amount>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>5</uid>
     <time>35</time>
     <side>BID</side>
     <price>-1</price>
-    <amount>5</amount>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>6</uid>
     <time>36</time>
     <side>ASK</side>
-    <price>1011</price>
-    <amount>9</amount>
+    <price>-1</price>
+    <amount>7</amount>
   </Order>
   <Order>
     <uid>7</uid>
     <time>37</time>
     <side>ASK</side>
-    <price>990</price>
-    <amount>3</amount>
+    <price>-1</price>
+    <amount>2</amount>
   </Order>
   <Order>
     <uid>8</uid>
     <time>38</time>
-    <side>BID</side>
-    <price>993</price>
+    <side>ASK</side>
+    <price>-1</price>
     <amount>8</amount>
   </Order>
   <Order>
     <uid>9</uid>
     <time>39</time>
     <side>BID</side>
-    <price>991</price>
-    <amount>5</amount>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>0</uid>
     <time>40</time>
     <side>ASK</side>
-    <price>1019</price>
-    <amount>3</amount>
+    <price>-1</price>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>1</uid>
     <time>41</time>
     <side>BID</side>
-    <price>993</price>
-    <amount>5</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>2</uid>
     <time>42</time>
-    <side>ASK</side>
-    <price>1009</price>
-    <amount>9</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>3</uid>
     <time>43</time>
-    <side>ASK</side>
-    <price>1002</price>
-    <amount>8</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>9</amount>
   </Order>
   <Order>
     <uid>4</uid>
     <time>44</time>
     <side>BID</side>
-    <price>1014</price>
-    <amount>6</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>5</uid>
     <time>45</time>
     <side>ASK</side>
-    <price>1005</price>
-    <amount>4</amount>
+    <price>-1</price>
+    <amount>6</amount>
   </Order>
   <Order>
     <uid>6</uid>
     <time>46</time>
-    <side>BID</side>
-    <price>1001</price>
-    <amount>7</amount>
+    <side>ASK</side>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>7</uid>
     <time>47</time>
     <side>BID</side>
-    <price>993</price>
-    <amount>8</amount>
+    <price>-1</price>
+    <amount>5</amount>
   </Order>
   <Order>
     <uid>8</uid>
     <time>48</time>
     <side>ASK</side>
-    <price>1003</price>
-    <amount>7</amount>
+    <price>-1</price>
+    <amount>4</amount>
   </Order>
   <Order>
     <uid>9</uid>
     <time>49</time>
-    <side>ASK</side>
-    <price>1005</price>
-    <amount>8</amount>
+    <side>BID</side>
+    <price>-1</price>
+    <amount>3</amount>
   </Order>
 </ArrayOfOrder>
