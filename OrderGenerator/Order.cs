@@ -8,8 +8,15 @@ namespace OrderGenerator
 {
     public class Order
     {
+        public static int UidCount=0;
+        public static void SetOrderStartId(int uidCount)
+        {
+            UidCount = uidCount;
+        }
+
+        public int Uid;
         public int AccountUid;
-        public int Time;
+        public string Time;
         public enum BidOrAsk { BID, ASK };
         public BidOrAsk Side;
         public int Price;
@@ -18,10 +25,13 @@ namespace OrderGenerator
         public Order()
         {
         }
+
         public Order(int accountUid, int time, BidOrAsk side, int price, int amount)
         {
+            this.Uid = UidCount;
+            UidCount++;
             this.AccountUid = accountUid;
-            this.Time = time;
+            this.Time = DateTime.UtcNow.ToString();
             this.Side = side;
             this.Price = price;
             this.Amount = amount;

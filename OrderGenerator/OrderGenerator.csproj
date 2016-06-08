@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Order.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="OrderGenerator.cs" />
     <Compile Include="Xml.cs" />
   </ItemGroup>
   <ItemGroup>

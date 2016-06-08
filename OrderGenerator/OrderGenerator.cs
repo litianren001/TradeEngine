@@ -8,7 +8,7 @@ using System.Data;
 
 namespace OrderGenerator
 {
-    class Program
+    class OrderGenerator
     {
         const string CfgReadPath = "OrderGenerator.cfg";
 #if DEBUG
@@ -16,12 +16,13 @@ namespace OrderGenerator
 #else
         const string XmlWritePath = "OrderQueue.xml";
 #endif
-        const int AskMarketPrice = -2147483648;
-        const int BidMarketPrice = 2147483647;
+        const int AskMarketPrice = -2147483640;
+        const int BidMarketPrice = 2147483640;
 
         static StreamReader sr;
         static int AccountAmount;
         static int OrderAmount;
+        static int OrderStartId;
         static int BaseTime;
         static int MarketOrderChance;
         static int BidChance;
@@ -38,6 +39,7 @@ namespace OrderGenerator
         public static void Main()
         {
             ReadCfg();
+            Order.SetOrderStartId(OrderStartId);
             Order[] OrderQueue = new Order[OrderAmount];
             int accountUid;
             int time;
@@ -82,6 +84,7 @@ namespace OrderGenerator
             sr = new StreamReader(CfgReadPath);
             AccountAmount = ReadLineFromCfg();
             OrderAmount = ReadLineFromCfg();
+            OrderStartId = ReadLineFromCfg();
             BaseTime = ReadLineFromCfg();
             MarketOrderChance = ReadLineFromCfg();
             BidChance = ReadLineFromCfg();
