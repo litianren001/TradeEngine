@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace MatchEngine
 {
-    public class OrderMatchArray
+    public class OrderMatchList
     {
         const int MinInt = -2147483648;
         const int MaxInt = 2147483647;
-        const int AskMarketPrice = -2147483640;
-        const int BidMarketPrice = 2147483640;
+        const int SellMarketOrderPrice = -2147483640;
+        const int BuyMarketOrderPrice = 2147483640;
         const int MarketOrderFlag = -1;
 
         public int CurrentPrice;
 
-        List<Order> BuyOrderArray = new List<Order>();
+        List<Order> BuyOrderList = new List<Order>();
         int MaxBuyPrice;
 
-        List<Order> SellOrderArray = new List<Order>();
+        List<Order> SellOrderList = new List<Order>();
         int MinSellPrice;
 
-        public OrderMatchArray(int initialPrice)
+        public OrderMatchList(int initialPrice)
         {
             MaxBuyPrice = MinInt;
             MinSellPrice = MaxInt;
@@ -31,7 +31,7 @@ namespace MatchEngine
 
         public List<TradeRecord> AddOrderGetTradeRecord(Order order)
         {
-            if (order.Side == Order.BidOrAsk.BID)
+            if (order.Side == Order.BidOrAsk.BUY)
             {
                 AddBuyOrder(order);
             }
@@ -44,36 +44,36 @@ namespace MatchEngine
 
         void AddBuyOrder(Order order)
         {
-            BuyOrderArray.Add(order);
+            BuyOrderList.Add(order);
             if (order.Price > MaxBuyPrice)
                 MaxBuyPrice = order.Price;
             else
             {
-                int i = BuyOrderArray.Count - 2;  // i indicates the index of the insert postion candidate
-                while (i >= 0 && order.Price <= BuyOrderArray[i].Price)
+                int i = BuyOrderList.Count - 2;  // i indicates the index of the insert postion candidate
+                while (i >= 0 && order.Price <= BuyOrderList[i].Price)
                 {
-                    BuyOrderArray[i + 1] = BuyOrderArray[i];
+                    BuyOrderList[i + 1] = BuyOrderList[i];
                     i--;
                 }
                 i++;
-                BuyOrderArray[i] = order;
+                BuyOrderList[i] = order;
             }
         }
         void AddSellOrder(Order order)
         {
-            SellOrderArray.Add(order);
+            SellOrderList.Add(order);
             if (order.Price < MinSellPrice)
                 MinSellPrice = order.Price;
             else
             {
-                int i = SellOrderArray.Count - 2;  // i indicates the index of the insert postion candidate
-                while (i >= 0 && order.Price >= SellOrderArray[i].Price)
+                int i = SellOrderList.Count - 2;  // i indicates the index of the insert postion candidate
+                while (i >= 0 && order.Price >= SellOrderList[i].Price)
                 {
-                    SellOrderArray[i + 1] = SellOrderArray[i];
+                    SellOrderList[i + 1] = SellOrderList[i];
                     i--;
                 }
                 i++;
-                SellOrderArray[i] = order;
+                SellOrderList[i] = order;
             }
         }
 
@@ -88,83 +88,74 @@ namespace MatchEngine
             Order sellerOrder;
             while (MaxBuyPrice >= MinSellPrice)
             {
-                buyerOrder = BuyOrderArray[BuyOrderArray.Count - 1];
-                sellerOrder = SellOrderArray[SellOrderArray.Count - 1];
+                buyerOrder = BuyOrderList[BuyOrderList.Count - 1];
+                sellerOrder = SellOrderList[SellOrderList.Count - 1];
                 buyerUid = buyerOrder.AccountUid;
                 sellerUid = sellerOrder.AccountUid;
                 if (buyerOrder.Amount < sellerOrder.Amount)
                 {
                     amount = buyerOrder.Amount;
-                    if (buyerOrder.Uid < sellerOrder.Uid)
-                    {
-                        price = buyerOrder.Price;
-                    }
-                    else
-                    {
-                        price = sellerOrder.Price;
-                    }
-                    if (price == BidMarketPrice || price == AskMarketPrice)
-                        price = CurrentPrice;
+                    price = GetTradePrice(buyerOrder, sellerOrder);
                     tradeRecord.Add(new TradeRecord(buyerUid, sellerUid, price, amount));
                     CurrentPrice = price;
                     sellerOrder.Amount = sellerOrder.Amount - buyerOrder.Amount;
-                    BuyOrderArray.RemoveAt(BuyOrderArray.Count - 1);
-                    if (BuyOrderArray.Count == 0)
+                    BuyOrderList.RemoveAt(BuyOrderList.Count - 1);
+                    if (BuyOrderList.Count == 0)
                         MaxBuyPrice = MinInt;
                     else
-                        MaxBuyPrice = BuyOrderArray[BuyOrderArray.Count - 1].Price;
+                        MaxBuyPrice = BuyOrderList[BuyOrderList.Count - 1].Price;
                 }
                 else if (buyerOrder.Amount > sellerOrder.Amount)
                 {
                     amount = sellerOrder.Amount;
-                    if (buyerOrder.Uid < sellerOrder.Uid)
-                    {
-                        price = buyerOrder.Price;
-                    }
-                    else
-                    {
-                        price = sellerOrder.Price;
-                    }
-                    if (price == BidMarketPrice || price == AskMarketPrice)
-                        price = CurrentPrice;
+                    price = GetTradePrice(buyerOrder, sellerOrder);
                     tradeRecord.Add(new TradeRecord(buyerUid, sellerUid, price, amount));
                     CurrentPrice = price;
                     buyerOrder.Amount = buyerOrder.Amount - sellerOrder.Amount;
-                    SellOrderArray.RemoveAt(SellOrderArray.Count - 1);
-                    if (SellOrderArray.Count == 0)
+                    SellOrderList.RemoveAt(SellOrderList.Count - 1);
+                    if (SellOrderList.Count == 0)
                         MinSellPrice = MaxInt;
                     else
-                        MinSellPrice = SellOrderArray[SellOrderArray.Count - 1].Price;
+                        MinSellPrice = SellOrderList[SellOrderList.Count - 1].Price;
 
                 }
                 else
                 {
                     amount = buyerOrder.Amount;
-                    if (buyerOrder.Uid < sellerOrder.Uid)
-                    {
-                        price = buyerOrder.Price;
-                    }
-                    else
-                    {
-                        price = sellerOrder.Price;
-                    }
-                    if (price == BidMarketPrice || price == AskMarketPrice)
-                        price = CurrentPrice;
+                    price = GetTradePrice(buyerOrder, sellerOrder);
                     tradeRecord.Add(new TradeRecord(buyerUid, sellerUid, price, amount));
                     CurrentPrice = price;
-                    BuyOrderArray.RemoveAt(BuyOrderArray.Count - 1);
-                    if (BuyOrderArray.Count == 0)
+                    BuyOrderList.RemoveAt(BuyOrderList.Count - 1);
+                    if (BuyOrderList.Count == 0)
                         MaxBuyPrice = MinInt;
                     else
-                        MaxBuyPrice = BuyOrderArray[BuyOrderArray.Count - 1].Price;
-                    SellOrderArray.RemoveAt(SellOrderArray.Count - 1);
-                    if (SellOrderArray.Count == 0)
+                        MaxBuyPrice = BuyOrderList[BuyOrderList.Count - 1].Price;
+                    SellOrderList.RemoveAt(SellOrderList.Count - 1);
+                    if (SellOrderList.Count == 0)
                         MinSellPrice = MaxInt;
                     else
-                        MinSellPrice = SellOrderArray[SellOrderArray.Count - 1].Price;
+                        MinSellPrice = SellOrderList[SellOrderList.Count - 1].Price;
                 }
             }
             return tradeRecord;
+        }
+
+        int GetTradePrice(Order buyerOrder,Order sellerOrder)
+        {
+            if (buyerOrder.Price == BuyMarketOrderPrice && sellerOrder.Price == SellMarketOrderPrice)
+                return CurrentPrice;
+            else if (buyerOrder.Price == BuyMarketOrderPrice)
+                return sellerOrder.Price;
+            else if (sellerOrder.Price == SellMarketOrderPrice)
+                return buyerOrder.Price;
+            else if (buyerOrder.Uid < sellerOrder.Uid)
+            {
+                return buyerOrder.Price;
+            }
+            else
+            {
+                return sellerOrder.Price;
+            }
         }
 
     }

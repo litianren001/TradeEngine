@@ -17,7 +17,7 @@ namespace MatchEngine
         public int Uid;
         public int AccountUid;
         public string Time;
-        public enum BidOrAsk { BID, ASK };
+        public enum BidOrAsk { BUY, SELL };
         public BidOrAsk Side;
         public int Price;
         public int Amount;

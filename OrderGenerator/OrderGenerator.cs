@@ -12,14 +12,17 @@ namespace OrderGenerator
     {
         const string CfgReadPath = "OrderGenerator.cfg";
 #if DEBUG
-        const string XmlWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
+        const string FileWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
 #else
-        const string XmlWritePath = "OrderQueue.xml";
+        const string FileWritePath = "OrderQueue.xml";
 #endif
-        const int AskMarketPrice = -2147483640;
-        const int BidMarketPrice = 2147483640;
+        const int SellMarketOrderPrice = -2147483640;
+        const int BuyMarketOrderPrice = 2147483640;
 
         static StreamReader sr;
+        static int IsFileImplementation;
+        static int IsMessageQueueImplementation;
+        static int IsWebImplementation;
         static int AccountAmount;
         static int OrderAmount;
         static int OrderStartId;
@@ -39,6 +42,17 @@ namespace OrderGenerator
         public static void Main()
         {
             ReadCfg();
+            if (IsFileImplementation == 1)
+                FileImplementation();
+            else if (IsMessageQueueImplementation==1)
+                MessageQueueImplementation();
+            else if (IsWebImplementation==1)
+                WebImplementation();
+            Console.ReadKey();
+        }
+
+        static void FileImplementation()
+        {
             Order.SetOrderStartId(OrderStartId);
             Order[] OrderQueue = new Order[OrderAmount];
             int accountUid;
@@ -48,40 +62,50 @@ namespace OrderGenerator
             int price;
             int amount;
             Order.BidOrAsk side;
-
-
             for (int i = 0; i < OrderAmount; i++)
             {
                 accountUid = i % AccountAmount;
                 time = BaseTime + i;
                 if (Rand.NextDouble() < bidChance)
                 {
-                    side = Order.BidOrAsk.BID;
+                    side = Order.BidOrAsk.BUY;
                     price = Round(Gaussian(BidPriceMean, BidPriceSD));
                     amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
                     if (amount < 1) amount = 1;
                     if (Rand.NextDouble() < marketOrderChance)
-                        price = BidMarketPrice;
+                        price = BuyMarketOrderPrice;
                 }
                 else
                 {
-                    side = Order.BidOrAsk.ASK;
+                    side = Order.BidOrAsk.SELL;
                     price = Round(Gaussian(AskPriceMean, AskPriceSD));
                     amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
                     if (amount < 1) amount = 1;
                     if (Rand.NextDouble() < marketOrderChance)
-                        price = AskMarketPrice;
+                        price = SellMarketOrderPrice;
                 }
                 Order NewOrder = new Order(accountUid, time, side, price, amount);
                 OrderQueue[i] = NewOrder;
             }
-            WriteOrderToXml(ref OrderQueue);
-            Console.ReadKey();
+            WriteOrderToFile(ref OrderQueue);
+        }
+
+        static void MessageQueueImplementation()
+        {
+
+        }
+
+        static void WebImplementation()
+        {
+
         }
 
         static void ReadCfg()
         {
             sr = new StreamReader(CfgReadPath);
+            IsFileImplementation = ReadLineFromCfg();
+            IsMessageQueueImplementation = ReadLineFromCfg();
+            IsWebImplementation = ReadLineFromCfg();
             AccountAmount = ReadLineFromCfg();
             OrderAmount = ReadLineFromCfg();
             OrderStartId = ReadLineFromCfg();
@@ -104,9 +128,9 @@ namespace OrderGenerator
             return int.Parse(line.Substring(line.IndexOf('=') + 1));
         }
 
-        static void WriteOrderToXml(ref Order[] orderQueue)
+        static void WriteOrderToFile(ref Order[] orderQueue)
         {
-            File.WriteAllText(XmlWritePath, Xml.XMLSerializer(typeof(Order[]), orderQueue));
+            File.WriteAllText(FileWritePath, Xml.XMLSerializer(typeof(Order[]), orderQueue));
             Console.WriteLine("OrderQueue.xml created successfully.");
         }
         static double Gaussian(double mean = 0, double sd = 1)
