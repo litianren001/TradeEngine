@@ -12,20 +12,23 @@ namespace MatchEngine
 {
     class Program
     {
-        static string CfgReadPath = "MatchEngine.cfg";
+        const string CfgReadPath = "MatchEngine.cfg";
+#if DEBUG
+        const string XmlReadPath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
+#else
+        const string XmlReadPath = "OrderQueue.xml";
+#endif
+
         static StreamReader sr;
         static int AccountAmount;
         static int OrderAmount;
-        static int MinPrice;
-        static int MaxPrice;
-        //static string XmlReadPath = "OrderQueue.xml";
-        static string XmlReadPath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
+        static int InitialPrice;
         static void Main()
         {
             ReadCfg();
             Order[] OrderQueue = new Order[OrderAmount];
             ReadOrderFromXml(ref OrderQueue);
-            Order[][] PriceHashTable=new Order[MaxPrice-MinPrice][];
+
 
             Console.ReadKey();
         }
@@ -34,8 +37,7 @@ namespace MatchEngine
             sr = new StreamReader(CfgReadPath);
             AccountAmount = ReadLineFromCfg();
             OrderAmount = ReadLineFromCfg();
-            MinPrice = ReadLineFromCfg();
-            MaxPrice = ReadLineFromCfg();
+            InitialPrice = ReadLineFromCfg();
         }
 
         static int ReadLineFromCfg()

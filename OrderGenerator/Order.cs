@@ -8,23 +8,23 @@ namespace OrderGenerator
 {
     public class Order
     {
-        public int uid;
-        public int time;
-        public enum bidOrAsk { BID, ASK };
-        public bidOrAsk side;
-        public int price;
-        public int amount;
+        public int AccountUid;
+        public int Time;
+        public enum BidOrAsk { BID, ASK };
+        public BidOrAsk Side;
+        public int Price;
+        public int Amount;
 
         public Order()
         {
         }
-        public Order(int uid, int time, bidOrAsk side, int price, int amount)
+        public Order(int accountUid, int time, BidOrAsk side, int price, int amount)
         {
-            this.uid = uid;
-            this.time = time;
-            this.side = side;
-            this.price = price;
-            this.amount = amount;
+            this.AccountUid = accountUid;
+            this.Time = time;
+            this.Side = side;
+            this.Price = price;
+            this.Amount = amount;
         }
     }
 }

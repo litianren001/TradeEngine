@@ -10,10 +10,14 @@ namespace OrderGenerator
 {
     class Program
     {
-        static string CfgReadPath = "OrderGenerator.cfg";
-        //static string XmlWritePath = "OrderQueue.xml";
-        static string XmlWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
-        static int MarketOrderFlag = -1;
+        const string CfgReadPath = "OrderGenerator.cfg";
+#if DEBUG
+        const string XmlWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
+#else
+        const string XmlWritePath = "OrderQueue.xml";
+#endif
+        const int AskMarketPrice = -2147483648;
+        const int BidMarketPrice = 2147483647;
 
         static StreamReader sr;
         static int AccountAmount;
@@ -29,42 +33,44 @@ namespace OrderGenerator
         static int AskPriceSD;
         static int AskContractsPerOrderMean;
         static int AskContractsPerOrderSD;
-        static Random rand = new Random(unchecked((int)DateTime.Now.Ticks));
+        static Random Rand = new Random(unchecked((int)DateTime.Now.Ticks));
 
         public static void Main()
         {
             ReadCfg();
             Order[] OrderQueue = new Order[OrderAmount];
-            int uid;
+            int accountUid;
             int time;
             double marketOrderChance = MarketOrderChance / 100.0;
             double bidChance = BidChance / 100.0;
             int price;
             int amount;
-            Order.bidOrAsk side;
+            Order.BidOrAsk side;
 
 
             for (int i = 0; i < OrderAmount; i++)
             {
-                uid = i % AccountAmount;
+                accountUid = i % AccountAmount;
                 time = BaseTime + i;
-                if (rand.NextDouble() < bidChance)
+                if (Rand.NextDouble() < bidChance)
                 {
-                    side = Order.bidOrAsk.BID;
+                    side = Order.BidOrAsk.BID;
                     price = Round(Gaussian(BidPriceMean, BidPriceSD));
                     amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
                     if (amount < 1) amount = 1;
+                    if (Rand.NextDouble() < marketOrderChance)
+                        price = BidMarketPrice;
                 }
                 else
                 {
-                    side = Order.bidOrAsk.ASK;
+                    side = Order.BidOrAsk.ASK;
                     price = Round(Gaussian(AskPriceMean, AskPriceSD));
                     amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
                     if (amount < 1) amount = 1;
+                    if (Rand.NextDouble() < marketOrderChance)
+                        price = AskMarketPrice;
                 }
-                if (rand.NextDouble() < marketOrderChance)
-                    price = MarketOrderFlag;
-                Order NewOrder = new Order(uid, time, side, price, amount);
+                Order NewOrder = new Order(accountUid, time, side, price, amount);
                 OrderQueue[i] = NewOrder;
             }
             WriteOrderToXml(ref OrderQueue);
@@ -95,14 +101,14 @@ namespace OrderGenerator
             return int.Parse(line.Substring(line.IndexOf('=') + 1));
         }
 
-        static void WriteOrderToXml(ref Order[] OrderQueue)
+        static void WriteOrderToXml(ref Order[] orderQueue)
         {
-            File.WriteAllText(XmlWritePath, Xml.XMLSerializer(typeof(Order[]), OrderQueue));
+            File.WriteAllText(XmlWritePath, Xml.XMLSerializer(typeof(Order[]), orderQueue));
             Console.WriteLine("OrderQueue.xml created successfully.");
         }
         static double Gaussian(double mean = 0, double sd = 1)
         {
-            return mean + sd * (Math.Sqrt(-2 * Math.Log(rand.NextDouble())) * Math.Cos(2 * Math.PI * rand.NextDouble()));
+            return mean + sd * (Math.Sqrt(-2 * Math.Log(Rand.NextDouble())) * Math.Cos(2 * Math.PI * Rand.NextDouble()));
         }
 
         static int Round(double x)
