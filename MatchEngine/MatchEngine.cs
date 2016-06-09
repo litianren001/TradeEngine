@@ -16,15 +16,20 @@ namespace MatchEngine
     {
         const string CfgReadPath = "MatchEngine.cfg";
 #if DEBUG
-        const string XmlReadPath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
-        const string XmlWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/TradeRecord.xml";
+        const string FileReadPath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/OrderQueue.xml";
+        const string FileWritePath = "C:/Users/litia_000/Documents/Visual Studio 2015/Projects/TradeEngine/TradeRecord.xml";
 #else
-        const string XmlReadPath = "OrderQueue.xml";
-        const string XmlWritePath= "TradeRecord.xml";
+        const string FileReadPath = "OrderQueue.xml";
+        const string FileWritePath = "TradeRecord.xml";
 #endif
 
-        const string MessageQueuePath = @".\Private$\OrderQueue";
-        const string MessageQueueName = "OrderQueue";
+        const string OrderMessageQueuePath = @".\Private$\TLIOrderQueue";
+        const string OrderMessageQueueName = "OrderQueue";
+        const int OrderMessageQueueJournalSize = 1000;
+
+        const string PriceMessageQueuePath = @".\Private$\TLIPriceQueue";
+        const string PriceMessageQueueName = "PriceQueue";
+        const int PriceMessageQueueJournalSize = 1000;
 
         static StreamReader sr;
         static int IsFileImplementation;
@@ -32,13 +37,14 @@ namespace MatchEngine
         static int IsWebImplementation;
         static int AccountAmount;
         static int OrderAmount;
-        static int InitialPrice;
+        static int CurrentPrice;
         static int TradeRecordStartId;
-        static int MessageReceiveInterval;
+        static int OrderReceiveInterval;
 
         static OrderMatchList OrderMatchList;
         static List<TradeRecord> TradeRecordList;
         static MessageQueue OrderQueue;
+        static MessageQueue PriceQueue;
 
         static void Main()
         {
@@ -56,7 +62,7 @@ namespace MatchEngine
         {
             Order[] OrderQueue = new Order[OrderAmount];
             ReadOrderFromXml(ref OrderQueue);
-            OrderMatchList = new OrderMatchList(InitialPrice);
+            OrderMatchList = new OrderMatchList(CurrentPrice);
             TradeRecord.SetTradeRecordStartId(TradeRecordStartId);
             TradeRecordList = new List<TradeRecord>();
             for (int i = 0; i < OrderAmount; i++)
@@ -68,23 +74,36 @@ namespace MatchEngine
 
         static void MessageQueueImplementation()
         {
-            OrderMatchList = new OrderMatchList(InitialPrice);
+            OrderMatchList = new OrderMatchList(CurrentPrice);
             TradeRecord.SetTradeRecordStartId(TradeRecordStartId);
             TradeRecordList = new List<TradeRecord>();
 
-            if (MessageQueue.Exists(MessageQueuePath))
+            if (MessageQueue.Exists(OrderMessageQueuePath))
             {
-                OrderQueue = new MessageQueue(MessageQueuePath);
+                OrderQueue = new MessageQueue(OrderMessageQueuePath);
             }
             else
             {
-                Console.WriteLine("Message Queue isn't exist.");
-                return;
+                OrderQueue = MessageQueue.Create(OrderMessageQueuePath);
+                OrderQueue.Label = OrderMessageQueueName;
+                OrderQueue.UseJournalQueue = true;
+                OrderQueue.MaximumJournalSize = OrderMessageQueueJournalSize;
             }
-            System.Type[] types = new Type[1];
-            types[0] = typeof(Order);
-            OrderQueue.Formatter = new XmlMessageFormatter(types);
-            Timer timer = new Timer(MessageReceiveInterval);
+            if (MessageQueue.Exists(PriceMessageQueuePath))
+            {
+                PriceQueue = new MessageQueue(PriceMessageQueuePath);
+            }
+            else
+            {
+                PriceQueue = MessageQueue.Create(PriceMessageQueuePath);
+                PriceQueue.Label = PriceMessageQueueName;
+                PriceQueue.UseJournalQueue = true;
+                PriceQueue.MaximumJournalSize = PriceMessageQueueJournalSize;
+            }
+
+            OrderQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(Order) });
+            PriceQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(int) });
+            Timer timer = new Timer(OrderReceiveInterval);
             timer.Elapsed += new ElapsedEventHandler(ReceiveOrderFromMessageQueue);
             timer.AutoReset = true;
             timer.Enabled = true;
@@ -95,7 +114,11 @@ namespace MatchEngine
         {
             Order newOrder = (OrderQueue.Receive().Body) as Order;
             TradeRecordList.AddRange(PrintTradeRecord(OrderMatchList.AddOrderGetTradeRecord(newOrder)));
-
+            if (CurrentPrice != OrderMatchList.CurrentPrice)
+            {
+                CurrentPrice = OrderMatchList.CurrentPrice;
+                PriceQueue.Send(OrderMatchList.CurrentPrice);
+            }
         }
 
         static List<TradeRecord> PrintTradeRecord(List<TradeRecord> tradeRecord)
@@ -106,6 +129,26 @@ namespace MatchEngine
             }
             return tradeRecord;
         }
+
+        static bool IsQueueEmpty(string path)
+        {
+            bool isQueueEmpty = false;
+            var myQueue = new MessageQueue(path);
+            try
+            {
+                myQueue.Peek(new TimeSpan(0));
+                isQueueEmpty = false;
+            }
+            catch (MessageQueueException e)
+            {
+                if (e.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
+                {
+                    isQueueEmpty = true;
+                }
+            }
+            return isQueueEmpty;
+        }
+
         static void WebImplementation()
         {
 
@@ -114,31 +157,38 @@ namespace MatchEngine
         static void ReadCfg()
         {
             sr = new StreamReader(CfgReadPath);
-            IsFileImplementation = ReadLineFromCfg();
-            IsMessageQueueImplementation = ReadLineFromCfg();
-            IsWebImplementation = ReadLineFromCfg();
-            AccountAmount = ReadLineFromCfg();
-            OrderAmount = ReadLineFromCfg();
-            InitialPrice = ReadLineFromCfg();
-            TradeRecordStartId = ReadLineFromCfg();
-            MessageReceiveInterval = ReadLineFromCfg();
+            IsFileImplementation = ReadIntFromCfg();
+            IsMessageQueueImplementation = ReadIntFromCfg();
+            IsWebImplementation = ReadIntFromCfg();
+            AccountAmount = ReadIntFromCfg();
+            OrderAmount = ReadIntFromCfg();
+            CurrentPrice = ReadIntFromCfg();
+            TradeRecordStartId = ReadIntFromCfg();
+            OrderReceiveInterval = ReadIntFromCfg();
+
         }
 
-        static int ReadLineFromCfg()
+        static int ReadIntFromCfg()
         {
             String line = sr.ReadLine();
             return int.Parse(line.Substring(line.IndexOf('=') + 1));
         }
 
+        static double ReadDoubleFromCfg()
+        {
+            String line = sr.ReadLine();
+            return double.Parse(line.Substring(line.IndexOf('=') + 1));
+        }
+
         static void ReadOrderFromXml(ref Order[] orderQueue)
         {
-            orderQueue = Xml.Deserialize(typeof(Order[]), File.ReadAllText(XmlReadPath)) as Order[];
+            orderQueue = Xml.Deserialize(typeof(Order[]), File.ReadAllText(FileReadPath)) as Order[];
             Console.WriteLine("OrderQueue.xml loaded successfully.");
         }
 
         static void WriteTradeRecordToXml(ref List<TradeRecord> tradeRecord)
         {
-            File.WriteAllText(XmlWritePath, Xml.XMLSerializer(typeof(List<TradeRecord>), tradeRecord));
+            File.WriteAllText(FileWritePath, Xml.XMLSerializer(typeof(List<TradeRecord>), tradeRecord));
             Console.WriteLine("TradeRecord.xml created successfully.");
         }
     }

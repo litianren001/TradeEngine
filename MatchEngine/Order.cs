@@ -21,7 +21,7 @@ namespace MatchEngine
         public string Time;
         public enum enumSide { BUY, SELL };
         public enumSide Side;
-        public enum enumFufillType { LMT, MKT, STP };
+        public enum enumFufillType { LMT, MKT };
         public enumFufillType FufillType;
         public int Price;
         public int Amount;

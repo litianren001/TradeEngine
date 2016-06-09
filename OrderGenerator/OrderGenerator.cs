@@ -21,9 +21,13 @@ namespace OrderGenerator
         const int SellMarketOrderPrice = -2147483640;
         const int BuyMarketOrderPrice = 2147483640;
 
-        const string MessageQueuePath = @".\Private$\OrderQueue";
-        const string MessageQueueName = "OrderQueue";
-        const int MessageQueueJournalSize = 1000;
+        const string OrderMessageQueuePath = @".\Private$\TLIOrderQueue";
+        const string OrderMessageQueueName = "OrderQueue";
+        const int OrderMessageQueueJournalSize = 1000;
+
+        const string PriceMessageQueuePath = @".\Private$\TLIPriceQueue";
+        const string PriceMessageQueueName = "PriceQueue";
+        const int PriceMessageQueueJournalSize = 1000;
 
         static StreamReader sr;
         static int IsFileImplementation;
@@ -32,33 +36,32 @@ namespace OrderGenerator
         static int AccountAmount;
         static int OrderAmount;
         static int OrderStartId;
-        static int MarketOrderChance;
-        static int BidChance;
-        static double fMarketOrderChance;
-        static double fBidChance;
-        static int BidPriceMean;
-        static int BidPriceSD;
-        static int BidContractsPerOrderMean;
-        static int BidContractsPerOrderSD;
-        static int AskPriceMean;
-        static int AskPriceSD;
-        static int AskContractsPerOrderMean;
-        static int AskContractsPerOrderSD;
-        static Random Rand = new Random(unchecked((int)DateTime.Now.Ticks));
+        static double BidChance;
+        static int CurrentPrice;
+        static double NominalPriceStandardDeviationRatio;
+        static double LogPriceStandardDeviation;
+        static double CommisionFee;
+        static double ContractsPerOrderMean;
+        static double ContractsPerOrderStandardDeviation;
+        static int OrderSendInterval;
+        static int PriceReceiveInterval;
 
-        static int MessageSendInterval;
+        static double LogCurrentPrice;
+        static Random Rand;
         static MessageQueue OrderQueue;
+        static MessageQueue PriceQueue;
         static int MessageOrderCount;
 
         public static void Main()
         {
+            Rand = new Random(unchecked((int)DateTime.Now.Ticks));
             ReadCfg();
             Order.SetOrderStartId(OrderStartId);
             if (IsFileImplementation == 1)
                 FileImplementation();
-            else if (IsMessageQueueImplementation==1)
+            else if (IsMessageQueueImplementation == 1)
                 MessageQueueImplementation();
-            else if (IsWebImplementation==1)
+            else if (IsWebImplementation == 1)
                 WebImplementation();
             Console.ReadKey();
         }
@@ -73,22 +76,20 @@ namespace OrderGenerator
             for (int i = 0; i < OrderAmount; i++)
             {
                 accountUid = i % AccountAmount;
-                if (Rand.NextDouble() < fBidChance)
+                amount = Round(Gaussian(ContractsPerOrderMean, ContractsPerOrderStandardDeviation));
+                if (amount < 1) amount = 1;
+                if (Rand.NextDouble() < BidChance)
                 {
+                    price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) - CommisionFee);
                     side = Order.enumSide.BUY;
-                    price = Round(Gaussian(BidPriceMean, BidPriceSD));
-                    amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
-                    if (amount < 1) amount = 1;
-                    if (Rand.NextDouble() < fMarketOrderChance)
+                    if (price > CurrentPrice)
                         price = BuyMarketOrderPrice;
                 }
                 else
                 {
+                    price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) + CommisionFee);
                     side = Order.enumSide.SELL;
-                    price = Round(Gaussian(AskPriceMean, AskPriceSD));
-                    amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
-                    if (amount < 1) amount = 1;
-                    if (Rand.NextDouble() < fMarketOrderChance)
+                    if (price < CurrentPrice)
                         price = SellMarketOrderPrice;
                 }
                 Order newOrder = new Order(accountUid, side, price, amount);
@@ -99,67 +100,112 @@ namespace OrderGenerator
 
         static void MessageQueueImplementation()
         {
-            if (MessageQueue.Exists(MessageQueuePath))
+            if (MessageQueue.Exists(OrderMessageQueuePath))
             {
-                OrderQueue = new MessageQueue(MessageQueuePath);
+                OrderQueue = new MessageQueue(OrderMessageQueuePath);
             }
             else
             {
-                OrderQueue = MessageQueue.Create(MessageQueuePath);
-                OrderQueue.Label = MessageQueueName;
+                OrderQueue = MessageQueue.Create(OrderMessageQueuePath);
+                OrderQueue.Label = OrderMessageQueueName;
                 OrderQueue.UseJournalQueue = true;
-                OrderQueue.MaximumJournalSize = MessageQueueJournalSize;
+                OrderQueue.MaximumJournalSize = OrderMessageQueueJournalSize;
             }
-            System.Type[] types = new Type[1];
-            types[0] = typeof(Order);
-            OrderQueue.Formatter = new XmlMessageFormatter(types);
-            Timer timer = new Timer(MessageSendInterval);
-            timer.Elapsed += new ElapsedEventHandler(SendOrderToMessageQueue);
-            timer.AutoReset = true;
+            if (MessageQueue.Exists(PriceMessageQueuePath))
+            {
+                PriceQueue = new MessageQueue(PriceMessageQueuePath);
+            }
+            else
+            {
+                PriceQueue = MessageQueue.Create(PriceMessageQueuePath);
+                PriceQueue.Label = PriceMessageQueueName;
+                PriceQueue.UseJournalQueue = true;
+                PriceQueue.MaximumJournalSize = PriceMessageQueueJournalSize;
+            }
+            OrderQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(Order) });
+            PriceQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(int) });
 
+            Timer orderSendTimer = new Timer(OrderSendInterval);
+            orderSendTimer.Elapsed += new ElapsedEventHandler(SendOrderToMessageQueue);
+            orderSendTimer.AutoReset = true;
             MessageOrderCount = 0;
 
-            timer.Enabled = true;
+            orderSendTimer.Enabled = true;
+
+            Timer priceReceiveTimer = new Timer(PriceReceiveInterval);
+            priceReceiveTimer.Elapsed += new ElapsedEventHandler(ReceivePriceFromMessageQueue);
+            priceReceiveTimer.AutoReset = true;
+            priceReceiveTimer.Enabled = true;
 
         }
 
-        static void SendOrderToMessageQueue(Object source,ElapsedEventArgs e)
+        static void ReceivePriceFromMessageQueue(Object source, ElapsedEventArgs e)
+        {
+            if (!IsQueueEmpty(PriceMessageQueuePath))
+            {
+                CurrentPrice = (int)PriceQueue.Receive().Body;
+                LogCurrentPrice = Math.Log(CurrentPrice);
+                Console.WriteLine($"New current price {CurrentPrice} is received.");
+            }
+        }
+
+        static void SendOrderToMessageQueue(Object source, ElapsedEventArgs e)
         {
             int accountUid;
             int price;
             int amount;
             Order.enumSide side;
             accountUid = MessageOrderCount % AccountAmount;
-            if (Rand.NextDouble() < fBidChance)
+            amount = Round(Gaussian(ContractsPerOrderMean, ContractsPerOrderStandardDeviation));
+            if (amount < 1) amount = 1;
+            if (Rand.NextDouble() < BidChance)
             {
                 side = Order.enumSide.BUY;
-                price = Round(Gaussian(BidPriceMean, BidPriceSD));
-                amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
-                if (amount < 1) amount = 1;
-                if (Rand.NextDouble() < fMarketOrderChance)
+                price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) - CommisionFee);
+                if (price > CurrentPrice)
                     price = BuyMarketOrderPrice;
             }
             else
             {
                 side = Order.enumSide.SELL;
-                price = Round(Gaussian(AskPriceMean, AskPriceSD));
-                amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
-                if (amount < 1) amount = 1;
-                if (Rand.NextDouble() < fMarketOrderChance)
+                price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) + CommisionFee);
+                if (price < CurrentPrice)
                     price = SellMarketOrderPrice;
             }
             Order newOrder = new Order(accountUid, side, price, amount);
+            OrderQueue.Send(newOrder);
             Console.Write($"Order #{MessageOrderCount} is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
             if (newOrder.FufillType != Order.enumFufillType.MKT)
                 Console.WriteLine($"\tPrice:{newOrder.Price}");
             else
                 Console.WriteLine();
-            OrderQueue.Send(newOrder);
             MessageOrderCount++;
+
+            /*
             if (MessageOrderCount == OrderAmount)
             {
                 (source as Timer).Enabled = false;
             }
+            */
+        }
+
+        static bool IsQueueEmpty(string path)
+        {
+            bool isQueueEmpty = false;
+            var myQueue = new MessageQueue(path);
+            try
+            {
+                myQueue.Peek(new TimeSpan(0));
+                isQueueEmpty = false;
+            }
+            catch (MessageQueueException e)
+            {
+                if (e.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
+                {
+                    isQueueEmpty = true;
+                }
+            }
+            return isQueueEmpty;
         }
 
         static void WebImplementation()
@@ -170,31 +216,35 @@ namespace OrderGenerator
         static void ReadCfg()
         {
             sr = new StreamReader(CfgReadPath);
-            IsFileImplementation = ReadLineFromCfg();
-            IsMessageQueueImplementation = ReadLineFromCfg();
-            IsWebImplementation = ReadLineFromCfg();
-            AccountAmount = ReadLineFromCfg();
-            OrderAmount = ReadLineFromCfg();
-            OrderStartId = ReadLineFromCfg();
-            MarketOrderChance = ReadLineFromCfg();
-            BidChance = ReadLineFromCfg();
-            fMarketOrderChance = MarketOrderChance / 100.0;
-            fBidChance = BidChance / 100.0;
-            BidPriceMean = ReadLineFromCfg();
-            BidPriceSD = ReadLineFromCfg();
-            BidContractsPerOrderMean = ReadLineFromCfg();
-            BidContractsPerOrderSD = ReadLineFromCfg();
-            AskPriceMean = ReadLineFromCfg();
-            AskPriceSD = ReadLineFromCfg();
-            AskContractsPerOrderMean = ReadLineFromCfg();
-            AskContractsPerOrderSD = ReadLineFromCfg();
-            MessageSendInterval= ReadLineFromCfg();
+            IsFileImplementation = ReadIntFromCfg();
+            IsMessageQueueImplementation = ReadIntFromCfg();
+            IsWebImplementation = ReadIntFromCfg();
+            AccountAmount = ReadIntFromCfg();
+            OrderAmount = ReadIntFromCfg();
+            OrderStartId = ReadIntFromCfg();
+            BidChance = ReadDoubleFromCfg();
+            CurrentPrice = ReadIntFromCfg();
+            NominalPriceStandardDeviationRatio = ReadDoubleFromCfg();
+            CommisionFee = ReadDoubleFromCfg();
+            ContractsPerOrderMean = ReadDoubleFromCfg();
+            ContractsPerOrderStandardDeviation = ReadDoubleFromCfg();
+            OrderSendInterval = ReadIntFromCfg();
+            PriceReceiveInterval = ReadIntFromCfg();
+
+            LogCurrentPrice = Math.Log(CurrentPrice);
+            LogPriceStandardDeviation = Math.Log(1 + NominalPriceStandardDeviationRatio);
         }
 
-        static int ReadLineFromCfg()
+        static int ReadIntFromCfg()
         {
             String line = sr.ReadLine();
             return int.Parse(line.Substring(line.IndexOf('=') + 1));
+        }
+
+        static double ReadDoubleFromCfg()
+        {
+            String line = sr.ReadLine();
+            return double.Parse(line.Substring(line.IndexOf('=') + 1));
         }
 
         static void WriteOrderToFile(ref Order[] orderQueue)
