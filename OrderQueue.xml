@@ -3,401 +3,181 @@
   <Order>
     <Uid>0</Uid>
     <AccountUid>0</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>SELL</Side>
-    <Price>989</Price>
-    <Amount>6</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>1007</Price>
+    <Amount>5</Amount>
   </Order>
   <Order>
     <Uid>1</Uid>
     <AccountUid>1</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1010</Price>
-    <Amount>1</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>BUY</Side>
+    <FufillType>LMT</FufillType>
+    <Price>995</Price>
+    <Amount>6</Amount>
   </Order>
   <Order>
     <Uid>2</Uid>
     <AccountUid>2</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>991</Price>
-    <Amount>9</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>BUY</Side>
+    <FufillType>LMT</FufillType>
+    <Price>1000</Price>
+    <Amount>4</Amount>
   </Order>
   <Order>
     <Uid>3</Uid>
     <AccountUid>3</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>BUY</Side>
-    <Price>999</Price>
-    <Amount>3</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>984</Price>
+    <Amount>6</Amount>
   </Order>
   <Order>
     <Uid>4</Uid>
     <AccountUid>4</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>BUY</Side>
-    <Price>1004</Price>
-    <Amount>3</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>998</Price>
+    <Amount>10</Amount>
   </Order>
   <Order>
     <Uid>5</Uid>
     <AccountUid>5</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>BUY</Side>
-    <Price>983</Price>
-    <Amount>8</Amount>
+    <FufillType>MKT</FufillType>
+    <Price>2147483640</Price>
+    <Amount>3</Amount>
   </Order>
   <Order>
     <Uid>6</Uid>
     <AccountUid>6</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>7</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>996</Price>
+    <Amount>6</Amount>
   </Order>
   <Order>
     <Uid>7</Uid>
     <AccountUid>7</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>10</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>LMT</FufillType>
+    <Price>1005</Price>
+    <Amount>2</Amount>
   </Order>
   <Order>
     <Uid>8</Uid>
     <AccountUid>8</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>997</Price>
-    <Amount>6</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>LMT</FufillType>
+    <Price>1009</Price>
+    <Amount>7</Amount>
   </Order>
   <Order>
     <Uid>9</Uid>
     <AccountUid>9</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>992</Price>
-    <Amount>4</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>MKT</FufillType>
+    <Price>-2147483640</Price>
+    <Amount>2</Amount>
   </Order>
   <Order>
     <Uid>10</Uid>
     <AccountUid>0</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>SELL</Side>
-    <Price>1027</Price>
-    <Amount>7</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>991</Price>
+    <Amount>4</Amount>
   </Order>
   <Order>
     <Uid>11</Uid>
     <AccountUid>1</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>SELL</Side>
-    <Price>1000</Price>
-    <Amount>5</Amount>
+    <FufillType>MKT</FufillType>
+    <Price>-2147483640</Price>
+    <Amount>4</Amount>
   </Order>
   <Order>
     <Uid>12</Uid>
     <AccountUid>2</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>1010</Price>
-    <Amount>5</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>MKT</FufillType>
+    <Price>-2147483640</Price>
+    <Amount>6</Amount>
   </Order>
   <Order>
     <Uid>13</Uid>
     <AccountUid>3</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>SELL</Side>
-    <Price>1022</Price>
-    <Amount>4</Amount>
+    <FufillType>MKT</FufillType>
+    <Price>-2147483640</Price>
+    <Amount>3</Amount>
   </Order>
   <Order>
     <Uid>14</Uid>
     <AccountUid>4</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>5</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>MKT</FufillType>
+    <Price>-2147483640</Price>
+    <Amount>3</Amount>
   </Order>
   <Order>
     <Uid>15</Uid>
     <AccountUid>5</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>994</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>SELL</Side>
+    <FufillType>LMT</FufillType>
+    <Price>1007</Price>
+    <Amount>1</Amount>
   </Order>
   <Order>
     <Uid>16</Uid>
     <AccountUid>6</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1011</Price>
-    <Amount>5</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>BUY</Side>
+    <FufillType>LMT</FufillType>
+    <Price>1007</Price>
+    <Amount>4</Amount>
   </Order>
   <Order>
     <Uid>17</Uid>
     <AccountUid>7</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>988</Price>
-    <Amount>1</Amount>
+    <Time>2016/6/8 23:41:15</Time>
+    <Side>BUY</Side>
+    <FufillType>MKT</FufillType>
+    <Price>2147483640</Price>
+    <Amount>5</Amount>
   </Order>
   <Order>
     <Uid>18</Uid>
     <AccountUid>8</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>BUY</Side>
-    <Price>992</Price>
-    <Amount>7</Amount>
+    <FufillType>LMT</FufillType>
+    <Price>985</Price>
+    <Amount>2</Amount>
   </Order>
   <Order>
     <Uid>19</Uid>
     <AccountUid>9</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
+    <Time>2016/6/8 23:41:15</Time>
     <Side>SELL</Side>
-    <Price>999</Price>
-    <Amount>6</Amount>
-  </Order>
-  <Order>
-    <Uid>20</Uid>
-    <AccountUid>0</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>994</Price>
-    <Amount>4</Amount>
-  </Order>
-  <Order>
-    <Uid>21</Uid>
-    <AccountUid>1</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>982</Price>
-    <Amount>8</Amount>
-  </Order>
-  <Order>
-    <Uid>22</Uid>
-    <AccountUid>2</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1007</Price>
-    <Amount>8</Amount>
-  </Order>
-  <Order>
-    <Uid>23</Uid>
-    <AccountUid>3</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1003</Price>
-    <Amount>4</Amount>
-  </Order>
-  <Order>
-    <Uid>24</Uid>
-    <AccountUid>4</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>997</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>25</Uid>
-    <AccountUid>5</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>984</Price>
-    <Amount>2</Amount>
-  </Order>
-  <Order>
-    <Uid>26</Uid>
-    <AccountUid>6</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>27</Uid>
-    <AccountUid>7</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>4</Amount>
-  </Order>
-  <Order>
-    <Uid>28</Uid>
-    <AccountUid>8</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1005</Price>
-    <Amount>5</Amount>
-  </Order>
-  <Order>
-    <Uid>29</Uid>
-    <AccountUid>9</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>1009</Price>
-    <Amount>6</Amount>
-  </Order>
-  <Order>
-    <Uid>30</Uid>
-    <AccountUid>0</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>999</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>31</Uid>
-    <AccountUid>1</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1013</Price>
-    <Amount>10</Amount>
-  </Order>
-  <Order>
-    <Uid>32</Uid>
-    <AccountUid>2</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1007</Price>
+    <FufillType>LMT</FufillType>
+    <Price>1014</Price>
     <Amount>3</Amount>
-  </Order>
-  <Order>
-    <Uid>33</Uid>
-    <AccountUid>3</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>984</Price>
-    <Amount>4</Amount>
-  </Order>
-  <Order>
-    <Uid>34</Uid>
-    <AccountUid>4</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>990</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>35</Uid>
-    <AccountUid>5</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>-2147483640</Price>
-    <Amount>6</Amount>
-  </Order>
-  <Order>
-    <Uid>36</Uid>
-    <AccountUid>6</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1011</Price>
-    <Amount>5</Amount>
-  </Order>
-  <Order>
-    <Uid>37</Uid>
-    <AccountUid>7</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>986</Price>
-    <Amount>8</Amount>
-  </Order>
-  <Order>
-    <Uid>38</Uid>
-    <AccountUid>8</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>-2147483640</Price>
-    <Amount>9</Amount>
-  </Order>
-  <Order>
-    <Uid>39</Uid>
-    <AccountUid>9</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>995</Price>
-    <Amount>2</Amount>
-  </Order>
-  <Order>
-    <Uid>40</Uid>
-    <AccountUid>0</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>2147483640</Price>
-    <Amount>6</Amount>
-  </Order>
-  <Order>
-    <Uid>41</Uid>
-    <AccountUid>1</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1026</Price>
-    <Amount>8</Amount>
-  </Order>
-  <Order>
-    <Uid>42</Uid>
-    <AccountUid>2</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1003</Price>
-    <Amount>3</Amount>
-  </Order>
-  <Order>
-    <Uid>43</Uid>
-    <AccountUid>3</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1003</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>44</Uid>
-    <AccountUid>4</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1009</Price>
-    <Amount>2</Amount>
-  </Order>
-  <Order>
-    <Uid>45</Uid>
-    <AccountUid>5</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1013</Price>
-    <Amount>6</Amount>
-  </Order>
-  <Order>
-    <Uid>46</Uid>
-    <AccountUid>6</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>989</Price>
-    <Amount>3</Amount>
-  </Order>
-  <Order>
-    <Uid>47</Uid>
-    <AccountUid>7</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>-2147483640</Price>
-    <Amount>5</Amount>
-  </Order>
-  <Order>
-    <Uid>48</Uid>
-    <AccountUid>8</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>SELL</Side>
-    <Price>1010</Price>
-    <Amount>7</Amount>
-  </Order>
-  <Order>
-    <Uid>49</Uid>
-    <AccountUid>9</AccountUid>
-    <Time>2016/6/8 21:04:25</Time>
-    <Side>BUY</Side>
-    <Price>997</Price>
-    <Amount>6</Amount>
   </Order>
 </ArrayOfOrder>

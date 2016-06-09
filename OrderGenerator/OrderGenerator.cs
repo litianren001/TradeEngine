@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Data;
+using System.Messaging;
+using System.Timers;
 
 namespace OrderGenerator
 {
@@ -19,6 +21,10 @@ namespace OrderGenerator
         const int SellMarketOrderPrice = -2147483640;
         const int BuyMarketOrderPrice = 2147483640;
 
+        const string MessageQueuePath = @".\Private$\OrderQueue";
+        const string MessageQueueName = "OrderQueue";
+        const int MessageQueueJournalSize = 1000;
+
         static StreamReader sr;
         static int IsFileImplementation;
         static int IsMessageQueueImplementation;
@@ -26,9 +32,10 @@ namespace OrderGenerator
         static int AccountAmount;
         static int OrderAmount;
         static int OrderStartId;
-        static int BaseTime;
         static int MarketOrderChance;
         static int BidChance;
+        static double fMarketOrderChance;
+        static double fBidChance;
         static int BidPriceMean;
         static int BidPriceSD;
         static int BidContractsPerOrderMean;
@@ -39,9 +46,14 @@ namespace OrderGenerator
         static int AskContractsPerOrderSD;
         static Random Rand = new Random(unchecked((int)DateTime.Now.Ticks));
 
+        static int MessageSendInterval;
+        static MessageQueue OrderQueue;
+        static int MessageOrderCount;
+
         public static void Main()
         {
             ReadCfg();
+            Order.SetOrderStartId(OrderStartId);
             if (IsFileImplementation == 1)
                 FileImplementation();
             else if (IsMessageQueueImplementation==1)
@@ -53,46 +65,101 @@ namespace OrderGenerator
 
         static void FileImplementation()
         {
-            Order.SetOrderStartId(OrderStartId);
             Order[] OrderQueue = new Order[OrderAmount];
             int accountUid;
-            int time;
-            double marketOrderChance = MarketOrderChance / 100.0;
-            double bidChance = BidChance / 100.0;
             int price;
             int amount;
-            Order.BidOrAsk side;
+            Order.enumSide side;
             for (int i = 0; i < OrderAmount; i++)
             {
                 accountUid = i % AccountAmount;
-                time = BaseTime + i;
-                if (Rand.NextDouble() < bidChance)
+                if (Rand.NextDouble() < fBidChance)
                 {
-                    side = Order.BidOrAsk.BUY;
+                    side = Order.enumSide.BUY;
                     price = Round(Gaussian(BidPriceMean, BidPriceSD));
                     amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
                     if (amount < 1) amount = 1;
-                    if (Rand.NextDouble() < marketOrderChance)
+                    if (Rand.NextDouble() < fMarketOrderChance)
                         price = BuyMarketOrderPrice;
                 }
                 else
                 {
-                    side = Order.BidOrAsk.SELL;
+                    side = Order.enumSide.SELL;
                     price = Round(Gaussian(AskPriceMean, AskPriceSD));
                     amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
                     if (amount < 1) amount = 1;
-                    if (Rand.NextDouble() < marketOrderChance)
+                    if (Rand.NextDouble() < fMarketOrderChance)
                         price = SellMarketOrderPrice;
                 }
-                Order NewOrder = new Order(accountUid, time, side, price, amount);
-                OrderQueue[i] = NewOrder;
+                Order newOrder = new Order(accountUid, side, price, amount);
+                OrderQueue[i] = newOrder;
             }
             WriteOrderToFile(ref OrderQueue);
         }
 
         static void MessageQueueImplementation()
         {
+            if (MessageQueue.Exists(MessageQueuePath))
+            {
+                OrderQueue = new MessageQueue(MessageQueuePath);
+            }
+            else
+            {
+                OrderQueue = MessageQueue.Create(MessageQueuePath);
+                OrderQueue.Label = MessageQueueName;
+                OrderQueue.UseJournalQueue = true;
+                OrderQueue.MaximumJournalSize = MessageQueueJournalSize;
+            }
+            System.Type[] types = new Type[1];
+            types[0] = typeof(Order);
+            OrderQueue.Formatter = new XmlMessageFormatter(types);
+            Timer timer = new Timer(MessageSendInterval);
+            timer.Elapsed += new ElapsedEventHandler(SendOrderToMessageQueue);
+            timer.AutoReset = true;
 
+            MessageOrderCount = 0;
+
+            timer.Enabled = true;
+
+        }
+
+        static void SendOrderToMessageQueue(Object source,ElapsedEventArgs e)
+        {
+            int accountUid;
+            int price;
+            int amount;
+            Order.enumSide side;
+            accountUid = MessageOrderCount % AccountAmount;
+            if (Rand.NextDouble() < fBidChance)
+            {
+                side = Order.enumSide.BUY;
+                price = Round(Gaussian(BidPriceMean, BidPriceSD));
+                amount = Round(Gaussian(BidContractsPerOrderMean, BidContractsPerOrderSD));
+                if (amount < 1) amount = 1;
+                if (Rand.NextDouble() < fMarketOrderChance)
+                    price = BuyMarketOrderPrice;
+            }
+            else
+            {
+                side = Order.enumSide.SELL;
+                price = Round(Gaussian(AskPriceMean, AskPriceSD));
+                amount = Round(Gaussian(AskContractsPerOrderMean, AskContractsPerOrderSD));
+                if (amount < 1) amount = 1;
+                if (Rand.NextDouble() < fMarketOrderChance)
+                    price = SellMarketOrderPrice;
+            }
+            Order newOrder = new Order(accountUid, side, price, amount);
+            Console.Write($"Order #{MessageOrderCount} is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
+            if (newOrder.FufillType != Order.enumFufillType.MKT)
+                Console.WriteLine($"\tPrice:{newOrder.Price}");
+            else
+                Console.WriteLine();
+            OrderQueue.Send(newOrder);
+            MessageOrderCount++;
+            if (MessageOrderCount == OrderAmount)
+            {
+                (source as Timer).Enabled = false;
+            }
         }
 
         static void WebImplementation()
@@ -109,9 +176,10 @@ namespace OrderGenerator
             AccountAmount = ReadLineFromCfg();
             OrderAmount = ReadLineFromCfg();
             OrderStartId = ReadLineFromCfg();
-            BaseTime = ReadLineFromCfg();
             MarketOrderChance = ReadLineFromCfg();
             BidChance = ReadLineFromCfg();
+            fMarketOrderChance = MarketOrderChance / 100.0;
+            fBidChance = BidChance / 100.0;
             BidPriceMean = ReadLineFromCfg();
             BidPriceSD = ReadLineFromCfg();
             BidContractsPerOrderMean = ReadLineFromCfg();
@@ -120,6 +188,7 @@ namespace OrderGenerator
             AskPriceSD = ReadLineFromCfg();
             AskContractsPerOrderMean = ReadLineFromCfg();
             AskContractsPerOrderSD = ReadLineFromCfg();
+            MessageSendInterval= ReadLineFromCfg();
         }
 
         static int ReadLineFromCfg()

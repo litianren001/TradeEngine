@@ -2,274 +2,234 @@
 <ArrayOfTradeRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TradeRecord>
     <Uid>0</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>2</BuyerUid>
-    <SellerUid>0</SellerUid>
-    <Price>997</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>3</BuyerUid>
+    <SellerUid>1</SellerUid>
+    <Price>1002</Price>
+    <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>1</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>6</BuyerUid>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>3</BuyerUid>
     <SellerUid>0</SellerUid>
-    <Price>997</Price>
-    <Amount>3</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>2</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>7</BuyerUid>
-    <SellerUid>4</SellerUid>
-    <Price>997</Price>
+    <Price>1005</Price>
     <Amount>6</Amount>
   </TradeRecord>
   <TradeRecord>
+    <Uid>2</Uid>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>4</BuyerUid>
+    <SellerUid>6</SellerUid>
+    <Price>996</Price>
+    <Amount>7</Amount>
+  </TradeRecord>
+  <TradeRecord>
     <Uid>3</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>8</BuyerUid>
-    <SellerUid>5</SellerUid>
-    <Price>1000</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>5</BuyerUid>
+    <SellerUid>7</SellerUid>
+    <Price>986</Price>
     <Amount>5</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>4</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>4</SellerUid>
-    <Price>998</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>8</BuyerUid>
+    <SellerUid>6</SellerUid>
+    <Price>992</Price>
+    <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>5</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>6</BuyerUid>
-    <SellerUid>5</SellerUid>
-    <Price>1000</Price>
-    <Amount>2</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>1</BuyerUid>
+    <SellerUid>4</SellerUid>
+    <Price>999</Price>
+    <Amount>4</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>6</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>6</BuyerUid>
-    <SellerUid>3</SellerUid>
-    <Price>1015</Price>
-    <Amount>3</Amount>
+    <SellerUid>4</SellerUid>
+    <Price>996</Price>
+    <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>7</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>6</BuyerUid>
-    <SellerUid>5</SellerUid>
-    <Price>1017</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>7</BuyerUid>
+    <SellerUid>0</SellerUid>
+    <Price>1005</Price>
     <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>8</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>8</BuyerUid>
-    <SellerUid>7</SellerUid>
-    <Price>1016</Price>
-    <Amount>4</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>9</BuyerUid>
+    <SellerUid>9</SellerUid>
+    <Price>1012</Price>
+    <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>9</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>0</BuyerUid>
-    <SellerUid>5</SellerUid>
-    <Price>1017</Price>
-    <Amount>4</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>10</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>0</BuyerUid>
-    <SellerUid>2</SellerUid>
-    <Price>995</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>9</BuyerUid>
+    <SellerUid>1</SellerUid>
+    <Price>1020</Price>
     <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
+    <Uid>10</Uid>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>8</BuyerUid>
+    <SellerUid>4</SellerUid>
+    <Price>1007</Price>
+    <Amount>4</Amount>
+  </TradeRecord>
+  <TradeRecord>
     <Uid>11</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>2</SellerUid>
-    <Price>995</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>8</BuyerUid>
+    <SellerUid>7</SellerUid>
+    <Price>1007</Price>
     <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>12</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>9</BuyerUid>
-    <SellerUid>3</SellerUid>
-    <Price>1000</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>7</BuyerUid>
+    <SellerUid>7</SellerUid>
+    <Price>1006</Price>
     <Amount>4</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>13</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>3</SellerUid>
-    <Price>998</Price>
-    <Amount>1</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>14</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>3</SellerUid>
-    <Price>995</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>8</BuyerUid>
+    <SellerUid>9</SellerUid>
+    <Price>1012</Price>
     <Amount>4</Amount>
   </TradeRecord>
   <TradeRecord>
+    <Uid>14</Uid>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>0</BuyerUid>
+    <SellerUid>9</SellerUid>
+    <Price>1002</Price>
+    <Amount>3</Amount>
+  </TradeRecord>
+  <TradeRecord>
     <Uid>15</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>9</BuyerUid>
-    <SellerUid>5</SellerUid>
-    <Price>998</Price>
-    <Amount>7</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>0</BuyerUid>
+    <SellerUid>0</SellerUid>
+    <Price>1002</Price>
+    <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>16</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>1</BuyerUid>
     <SellerUid>0</SellerUid>
-    <Price>1000</Price>
-    <Amount>5</Amount>
+    <Price>1001</Price>
+    <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>17</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>4</BuyerUid>
-    <SellerUid>2</SellerUid>
-    <Price>997</Price>
-    <Amount>5</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>3</BuyerUid>
+    <SellerUid>0</SellerUid>
+    <Price>1001</Price>
+    <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>18</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>2</SellerUid>
-    <Price>995</Price>
-    <Amount>1</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>3</BuyerUid>
+    <SellerUid>5</SellerUid>
+    <Price>1013</Price>
+    <Amount>4</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>19</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>9</BuyerUid>
-    <SellerUid>2</SellerUid>
-    <Price>992</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>3</BuyerUid>
+    <SellerUid>0</SellerUid>
+    <Price>1013</Price>
+    <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>20</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>6</BuyerUid>
     <SellerUid>0</SellerUid>
-    <Price>1000</Price>
-    <Amount>1</Amount>
+    <Price>1004</Price>
+    <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>21</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>6</BuyerUid>
-    <SellerUid>4</SellerUid>
-    <Price>1000</Price>
-    <Amount>5</Amount>
+    <SellerUid>1</SellerUid>
+    <Price>1004</Price>
+    <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>22</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>6</BuyerUid>
-    <SellerUid>7</SellerUid>
-    <Price>1009</Price>
-    <Amount>3</Amount>
+    <SellerUid>1</SellerUid>
+    <Price>996</Price>
+    <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>23</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>7</SellerUid>
-    <Price>1009</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>4</BuyerUid>
+    <SellerUid>3</SellerUid>
+    <Price>1010</Price>
+    <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>24</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>1</BuyerUid>
-    <SellerUid>8</SellerUid>
-    <Price>1017</Price>
-    <Amount>5</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>4</BuyerUid>
+    <SellerUid>5</SellerUid>
+    <Price>1014</Price>
+    <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>25</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>2</BuyerUid>
-    <SellerUid>8</SellerUid>
-    <Price>1017</Price>
-    <Amount>3</Amount>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>4</BuyerUid>
+    <SellerUid>4</SellerUid>
+    <Price>1014</Price>
+    <Amount>1</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>26</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>2</BuyerUid>
-    <SellerUid>8</SellerUid>
-    <Price>1017</Price>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>7</BuyerUid>
+    <SellerUid>5</SellerUid>
+    <Price>1004</Price>
     <Amount>2</Amount>
   </TradeRecord>
   <TradeRecord>
     <Uid>27</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>0</BuyerUid>
-    <SellerUid>3</SellerUid>
-    <Price>1004</Price>
-    <Amount>5</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>28</Uid>
-    <Time>2016/6/8 20:41:50</Time>
+    <Time>2016/6/8 21:49:38</Time>
     <BuyerUid>6</BuyerUid>
     <SellerUid>8</SellerUid>
-    <Price>1017</Price>
-    <Amount>4</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>29</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>5</BuyerUid>
-    <SellerUid>7</SellerUid>
-    <Price>1009</Price>
-    <Amount>6</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>30</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>5</BuyerUid>
-    <SellerUid>8</SellerUid>
-    <Price>1009</Price>
-    <Amount>1</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>31</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>4</BuyerUid>
-    <SellerUid>8</SellerUid>
-    <Price>1001</Price>
-    <Amount>2</Amount>
-  </TradeRecord>
-  <TradeRecord>
-    <Uid>32</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>4</BuyerUid>
-    <SellerUid>9</SellerUid>
-    <Price>1001</Price>
+    <Price>996</Price>
     <Amount>3</Amount>
   </TradeRecord>
   <TradeRecord>
-    <Uid>33</Uid>
-    <Time>2016/6/8 20:41:50</Time>
-    <BuyerUid>3</BuyerUid>
-    <SellerUid>9</SellerUid>
-    <Price>998</Price>
+    <Uid>28</Uid>
+    <Time>2016/6/8 21:49:38</Time>
+    <BuyerUid>2</BuyerUid>
+    <SellerUid>8</SellerUid>
+    <Price>993</Price>
     <Amount>2</Amount>
   </TradeRecord>
 </ArrayOfTradeRecord>

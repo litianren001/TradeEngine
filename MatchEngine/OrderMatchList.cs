@@ -31,7 +31,7 @@ namespace MatchEngine
 
         public List<TradeRecord> AddOrderGetTradeRecord(Order order)
         {
-            if (order.Side == Order.BidOrAsk.BUY)
+            if (order.Side == Order.enumSide.BUY)
             {
                 AddBuyOrder(order);
             }
