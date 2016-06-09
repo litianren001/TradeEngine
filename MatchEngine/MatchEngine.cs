@@ -9,6 +9,8 @@ using System.IO;
 using System.Data;
 using System.Timers;
 using System.Messaging;
+using System.Net;
+using System.Net.Sockets;
 
 namespace MatchEngine
 {
@@ -36,10 +38,13 @@ namespace MatchEngine
         static int IsMessageQueueImplementation;
         static int IsWebImplementation;
         static int AccountAmount;
-        static int OrderAmount;
         static int CurrentPrice;
         static int TradeRecordStartId;
-        static int OrderReceiveInterval;
+        static int FileOrderAmount;
+        static int MessageQueueOrderReceiveInterval;
+        static string WebHostMatchEngineIp;
+        static int WebHostMatchEnginePort;
+
 
         static OrderMatchList OrderMatchList;
         static List<TradeRecord> TradeRecordList;
@@ -60,12 +65,14 @@ namespace MatchEngine
 
         static void FileImplementation()
         {
-            Order[] OrderQueue = new Order[OrderAmount];
+            Order[] OrderQueue = new Order[FileOrderAmount];
             ReadOrderFromXml(ref OrderQueue);
+
             OrderMatchList = new OrderMatchList(CurrentPrice);
             TradeRecord.SetTradeRecordStartId(TradeRecordStartId);
             TradeRecordList = new List<TradeRecord>();
-            for (int i = 0; i < OrderAmount; i++)
+
+            for (int i = 0; i < FileOrderAmount; i++)
             {
                 TradeRecordList.AddRange(OrderMatchList.AddOrderGetTradeRecord(OrderQueue[i]));
             }
@@ -103,7 +110,7 @@ namespace MatchEngine
 
             OrderQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(Order) });
             PriceQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(int) });
-            Timer timer = new Timer(OrderReceiveInterval);
+            Timer timer = new Timer(MessageQueueOrderReceiveInterval);
             timer.Elapsed += new ElapsedEventHandler(ReceiveOrderFromMessageQueue);
             timer.AutoReset = true;
             timer.Enabled = true;
@@ -151,7 +158,31 @@ namespace MatchEngine
 
         static void WebImplementation()
         {
+            OrderMatchList = new OrderMatchList(CurrentPrice);
+            TradeRecord.SetTradeRecordStartId(TradeRecordStartId);
+            TradeRecordList = new List<TradeRecord>();
 
+            IPAddress hostIp = Dns.GetHostAddresses(WebHostMatchEngineIp)[0];
+            TcpListener listener = new TcpListener(hostIp, WebHostMatchEnginePort);
+            listener.Start();
+            Console.WriteLine("Waiting for connection...");
+            while (true)
+            {
+                TcpClient client = listener.AcceptTcpClient();
+                NetworkStream ns = client.GetStream();
+
+                byte[] newOrderByte = new byte[1024];
+                int newOrderByteRealLength = ns.Read(newOrderByte, 0, newOrderByte.Length);
+                Order newOrder = Xml.Deserialize(typeof(Order),Encoding.UTF8.GetString(newOrderByte, 0, newOrderByteRealLength)) as Order;
+                Console.WriteLine("Order is received and latest price is sent.");
+                TradeRecordList.AddRange(PrintTradeRecord(OrderMatchList.AddOrderGetTradeRecord(newOrder)));
+
+                CurrentPrice = OrderMatchList.CurrentPrice;
+                byte[] bytePrice = Encoding.ASCII.GetBytes(CurrentPrice.ToString());
+                ns.Write(bytePrice, 0, bytePrice.Length);
+                client.Close();
+
+            }
         }
 
         static void ReadCfg()
@@ -161,10 +192,12 @@ namespace MatchEngine
             IsMessageQueueImplementation = ReadIntFromCfg();
             IsWebImplementation = ReadIntFromCfg();
             AccountAmount = ReadIntFromCfg();
-            OrderAmount = ReadIntFromCfg();
             CurrentPrice = ReadIntFromCfg();
             TradeRecordStartId = ReadIntFromCfg();
-            OrderReceiveInterval = ReadIntFromCfg();
+            FileOrderAmount = ReadIntFromCfg();
+            MessageQueueOrderReceiveInterval = ReadIntFromCfg();
+            WebHostMatchEngineIp = ReadStringFromCfg();
+            WebHostMatchEnginePort = ReadIntFromCfg();
 
         }
 
@@ -178,6 +211,12 @@ namespace MatchEngine
         {
             String line = sr.ReadLine();
             return double.Parse(line.Substring(line.IndexOf('=') + 1));
+        }
+
+        static string ReadStringFromCfg()
+        {
+            String line = sr.ReadLine();
+            return line.Substring(line.IndexOf('=') + 1);
         }
 
         static void ReadOrderFromXml(ref Order[] orderQueue)

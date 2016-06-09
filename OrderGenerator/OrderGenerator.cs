@@ -7,6 +7,8 @@ using System.IO;
 using System.Data;
 using System.Messaging;
 using System.Timers;
+using System.Net;
+using System.Net.Sockets;
 
 namespace OrderGenerator
 {
@@ -29,12 +31,12 @@ namespace OrderGenerator
         const string PriceMessageQueueName = "PriceQueue";
         const int PriceMessageQueueJournalSize = 1000;
 
+
         static StreamReader sr;
         static int IsFileImplementation;
         static int IsMessageQueueImplementation;
         static int IsWebImplementation;
         static int AccountAmount;
-        static int OrderAmount;
         static int OrderStartId;
         static double BidChance;
         static int CurrentPrice;
@@ -43,20 +45,24 @@ namespace OrderGenerator
         static double CommisionFee;
         static double ContractsPerOrderMean;
         static double ContractsPerOrderStandardDeviation;
-        static int OrderSendInterval;
-        static int PriceReceiveInterval;
+        static int FileOrderAmount;
+        static int MessageQueueOrderSendInterval;
+        static int MessageQueuePriceReceiveInterval;
+        static string WebHostMatchEngineIp;
+        static int WebHostMatchEnginePort;
+        static int WebOrderSendInterval;
 
         static double LogCurrentPrice;
         static Random Rand;
         static MessageQueue OrderQueue;
         static MessageQueue PriceQueue;
         static int MessageOrderCount;
+        static int WebOrderCount;
 
         public static void Main()
         {
             Rand = new Random(unchecked((int)DateTime.Now.Ticks));
             ReadCfg();
-            Order.SetOrderStartId(OrderStartId);
             if (IsFileImplementation == 1)
                 FileImplementation();
             else if (IsMessageQueueImplementation == 1)
@@ -68,12 +74,12 @@ namespace OrderGenerator
 
         static void FileImplementation()
         {
-            Order[] OrderQueue = new Order[OrderAmount];
+            Order[] OrderQueue = new Order[FileOrderAmount];
             int accountUid;
             int price;
             int amount;
             Order.enumSide side;
-            for (int i = 0; i < OrderAmount; i++)
+            for (int i = 0; i < FileOrderAmount; i++)
             {
                 accountUid = i % AccountAmount;
                 amount = Round(Gaussian(ContractsPerOrderMean, ContractsPerOrderStandardDeviation));
@@ -125,17 +131,19 @@ namespace OrderGenerator
             OrderQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(Order) });
             PriceQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(int) });
 
-            Timer orderSendTimer = new Timer(OrderSendInterval);
+            Timer orderSendTimer = new Timer(MessageQueueOrderSendInterval);
             orderSendTimer.Elapsed += new ElapsedEventHandler(SendOrderToMessageQueue);
             orderSendTimer.AutoReset = true;
             MessageOrderCount = 0;
 
             orderSendTimer.Enabled = true;
 
-            Timer priceReceiveTimer = new Timer(PriceReceiveInterval);
+            Timer priceReceiveTimer = new Timer(MessageQueuePriceReceiveInterval);
             priceReceiveTimer.Elapsed += new ElapsedEventHandler(ReceivePriceFromMessageQueue);
             priceReceiveTimer.AutoReset = true;
             priceReceiveTimer.Enabled = true;
+
+            Console.WriteLine("Sending orders and receiving new prices by MS Message Queue...");
 
         }
 
@@ -174,7 +182,7 @@ namespace OrderGenerator
             }
             Order newOrder = new Order(accountUid, side, price, amount);
             OrderQueue.Send(newOrder);
-            Console.Write($"Order #{MessageOrderCount} is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
+            Console.Write($"Order is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
             if (newOrder.FufillType != Order.enumFufillType.MKT)
                 Console.WriteLine($"\tPrice:{newOrder.Price}");
             else
@@ -210,7 +218,72 @@ namespace OrderGenerator
 
         static void WebImplementation()
         {
+            Timer orderSendTimer = new Timer(WebOrderSendInterval);
+            orderSendTimer.Elapsed += new ElapsedEventHandler(SendOrderToWeb);
+            orderSendTimer.AutoReset = true;
+            WebOrderCount = 0;
 
+            orderSendTimer.Enabled = true;
+
+            Console.WriteLine("Sending orders and receiving new prices by TCP...");
+        }
+
+        static void SendOrderToWeb(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                TcpClient client = new TcpClient(WebHostMatchEngineIp, WebHostMatchEnginePort);
+                NetworkStream ns = client.GetStream();
+
+                int accountUid;
+                int price;
+                int amount;
+                Order.enumSide side;
+                accountUid = WebOrderCount % AccountAmount;
+                amount = Round(Gaussian(ContractsPerOrderMean, ContractsPerOrderStandardDeviation));
+                if (amount < 1) amount = 1;
+                if (Rand.NextDouble() < BidChance)
+                {
+                    side = Order.enumSide.BUY;
+                    price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) - CommisionFee);
+                    if (price > CurrentPrice)
+                        price = BuyMarketOrderPrice;
+                }
+                else
+                {
+                    side = Order.enumSide.SELL;
+                    price = Round(Math.Exp(Gaussian(LogCurrentPrice, LogPriceStandardDeviation)) + CommisionFee);
+                    if (price < CurrentPrice)
+                        price = SellMarketOrderPrice;
+                }
+
+                Order newOrder = new Order(accountUid, side, price, amount);
+                byte[] orderBytes = Encoding.UTF8.GetBytes(Xml.XMLSerializer(typeof(Order), newOrder));
+                ns.Write(orderBytes, 0, orderBytes.Length);
+                Console.Write($"Order is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
+                if (newOrder.FufillType != Order.enumFufillType.MKT)
+                    Console.WriteLine($"\tPrice:{newOrder.Price}");
+                else
+                    Console.WriteLine();
+                WebOrderCount++;
+
+                byte[] newPriceByte = new byte[1024];
+                int newPriceByteRealLength = ns.Read(newPriceByte, 0, newPriceByte.Length);
+                int newPrice = int.Parse(Encoding.UTF8.GetString(newPriceByte, 0, newPriceByteRealLength));
+                if (CurrentPrice != newPrice)
+                {
+                    CurrentPrice = newPrice;
+                    LogCurrentPrice = Math.Log(CurrentPrice);
+                    Console.WriteLine($"New current price {CurrentPrice} is received.");
+                }
+
+                client.Close();
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Connection fail.");
+            }
         }
 
         static void ReadCfg()
@@ -220,7 +293,6 @@ namespace OrderGenerator
             IsMessageQueueImplementation = ReadIntFromCfg();
             IsWebImplementation = ReadIntFromCfg();
             AccountAmount = ReadIntFromCfg();
-            OrderAmount = ReadIntFromCfg();
             OrderStartId = ReadIntFromCfg();
             BidChance = ReadDoubleFromCfg();
             CurrentPrice = ReadIntFromCfg();
@@ -228,9 +300,14 @@ namespace OrderGenerator
             CommisionFee = ReadDoubleFromCfg();
             ContractsPerOrderMean = ReadDoubleFromCfg();
             ContractsPerOrderStandardDeviation = ReadDoubleFromCfg();
-            OrderSendInterval = ReadIntFromCfg();
-            PriceReceiveInterval = ReadIntFromCfg();
+            FileOrderAmount = ReadIntFromCfg();
+            MessageQueueOrderSendInterval = ReadIntFromCfg();
+            MessageQueuePriceReceiveInterval = ReadIntFromCfg();
+            WebHostMatchEngineIp = ReadStringFromCfg();
+            WebHostMatchEnginePort = ReadIntFromCfg();
+            WebOrderSendInterval = ReadIntFromCfg();
 
+            Order.SetOrderStartId(OrderStartId);
             LogCurrentPrice = Math.Log(CurrentPrice);
             LogPriceStandardDeviation = Math.Log(1 + NominalPriceStandardDeviationRatio);
         }
@@ -245,6 +322,12 @@ namespace OrderGenerator
         {
             String line = sr.ReadLine();
             return double.Parse(line.Substring(line.IndexOf('=') + 1));
+        }
+
+        static string ReadStringFromCfg()
+        {
+            String line = sr.ReadLine();
+            return line.Substring(line.IndexOf('=') + 1);
         }
 
         static void WriteOrderToFile(ref Order[] orderQueue)
