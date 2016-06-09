@@ -171,9 +171,9 @@ namespace MatchEngine
                 TcpClient client = listener.AcceptTcpClient();
                 NetworkStream ns = client.GetStream();
 
-                byte[] newOrderByte = new byte[1024];
-                int newOrderByteRealLength = ns.Read(newOrderByte, 0, newOrderByte.Length);
-                Order newOrder = Xml.Deserialize(typeof(Order),Encoding.UTF8.GetString(newOrderByte, 0, newOrderByteRealLength)) as Order;
+                byte[] byteNewOrder = new byte[1024];
+                int byteNewOrderRealLength = ns.Read(byteNewOrder, 0, byteNewOrder.Length);
+                Order newOrder = Xml.Deserialize(typeof(Order),Encoding.UTF8.GetString(byteNewOrder, 0, byteNewOrderRealLength)) as Order;
                 Console.WriteLine("Order is received and latest price is sent.");
                 TradeRecordList.AddRange(PrintTradeRecord(OrderMatchList.AddOrderGetTradeRecord(newOrder)));
 

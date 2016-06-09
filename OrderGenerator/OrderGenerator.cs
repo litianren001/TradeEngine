@@ -225,7 +225,7 @@ namespace OrderGenerator
 
             orderSendTimer.Enabled = true;
 
-            Console.WriteLine("Sending orders and receiving new prices by TCP...");
+            Console.WriteLine("Sending orders and receiving new prices by TCP/IP...");
         }
 
         static void SendOrderToWeb(object sender, ElapsedEventArgs e)
@@ -258,8 +258,8 @@ namespace OrderGenerator
                 }
 
                 Order newOrder = new Order(accountUid, side, price, amount);
-                byte[] orderBytes = Encoding.UTF8.GetBytes(Xml.XMLSerializer(typeof(Order), newOrder));
-                ns.Write(orderBytes, 0, orderBytes.Length);
+                byte[] byteOrder = Encoding.UTF8.GetBytes(Xml.XMLSerializer(typeof(Order), newOrder));
+                ns.Write(byteOrder, 0, byteOrder.Length);
                 Console.Write($"Order is sent.\tId:{newOrder.Uid}\tAccount:{newOrder.AccountUid}\tSide:{newOrder.Side}\tAmount:{newOrder.Amount}\tType:{newOrder.FufillType}");
                 if (newOrder.FufillType != Order.enumFufillType.MKT)
                     Console.WriteLine($"\tPrice:{newOrder.Price}");
@@ -267,9 +267,9 @@ namespace OrderGenerator
                     Console.WriteLine();
                 WebOrderCount++;
 
-                byte[] newPriceByte = new byte[1024];
-                int newPriceByteRealLength = ns.Read(newPriceByte, 0, newPriceByte.Length);
-                int newPrice = int.Parse(Encoding.UTF8.GetString(newPriceByte, 0, newPriceByteRealLength));
+                byte[] byteNewPrice = new byte[1024];
+                int byteNewPriceRealLength = ns.Read(byteNewPrice, 0, byteNewPrice.Length);
+                int newPrice = int.Parse(Encoding.UTF8.GetString(byteNewPrice, 0, byteNewPriceRealLength));
                 if (CurrentPrice != newPrice)
                 {
                     CurrentPrice = newPrice;
